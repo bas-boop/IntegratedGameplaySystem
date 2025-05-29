@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GameSystem
@@ -7,20 +8,27 @@ namespace GameSystem
     {
         private static readonly Dictionary<string, GameObject> _gameObjects = new ();
 
+        public static GameObject GetGameObject(string gameObjectName)
+        {
+            if (_gameObjects.ContainsKey(gameObjectName))
+                return _gameObjects[gameObjectName];
+
+            return CreateGameObject(gameObjectName);
+        }
+        
         public static T AddComponent<T>(string gameObjectName) where T : Component
         {
             if (_gameObjects.ContainsKey(gameObjectName))
-            {
                 return _gameObjects[gameObjectName].AddComponent<T>();;
-            }
             
             return null;
         }
 
-        public static void CreateGameObject(string gameObjectName)
+        public static GameObject CreateGameObject(string gameObjectName)
         {
             GameObject newGameObject = new (gameObjectName);
             _gameObjects.Add(newGameObject.name, newGameObject);
+            return _gameObjects.Last().Value;
         }
     }
 }

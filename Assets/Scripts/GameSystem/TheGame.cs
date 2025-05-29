@@ -1,14 +1,12 @@
 using System.Collections.Generic;
-using Player;
 using UnityEngine;
 
-using Test;
+using Player;
 
 namespace GameSystem
 {
     public sealed class TheGame : MonoBehaviour
     {
-        private AObject _aObject;
         private PlayerManager _playerManager;
 
         private List<IGameobject> _gameobjects = new ();
@@ -29,6 +27,14 @@ namespace GameSystem
             }
         }
 
+        private void FixedUpdate()
+        {
+            foreach (IGameobject gameobject in _gameobjects)
+            {
+                gameobject.OnFixedUpdate();
+            }
+        }
+
         private void OnStart()
         { 
             CreateObjects();
@@ -42,13 +48,11 @@ namespace GameSystem
 
         private void CreateObjects()
         {
-            _aObject = new AObject();
             _playerManager = new ();
         }
 
         private void AddObjects()
         {
-            _gameobjects.Add(_aObject);
             _gameobjects.Add(_playerManager);
         }
     }
