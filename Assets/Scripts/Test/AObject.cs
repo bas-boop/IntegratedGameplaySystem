@@ -8,6 +8,9 @@ namespace Test
         public void OnStart()
         {
             Debug.Log("Start");
+
+            GameobjectComponentLibrary.CreateGameObject("newSprite");
+            GameobjectComponentLibrary.AddComponent<SpriteRenderer>("newSprite");
         }
 
         public void OnUpdate()
