@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Player;
+using StateMachine;
 
 namespace GameSystem
 {
@@ -44,6 +45,9 @@ namespace GameSystem
             {
                 gameobject.OnStart();
             }
+
+            TestFSM t = new TestFSM();
+            t.Yes();
         }
 
         private void CreateObjects()
