@@ -30,5 +30,17 @@ namespace GameSystem
             _gameObjects.Add(newGameObject.name, newGameObject);
             return _gameObjects.Last().Value;
         }
+
+        public static void SetParent(string child, string parent)
+        {
+            if (!_gameObjects.ContainsKey(child)
+                || !_gameObjects.ContainsKey(parent))
+            {
+                Debug.LogWarning($"{child} or {parent} does not exist - {nameof(GameobjectComponentLibrary)}");
+                return;
+            }
+            
+            _gameObjects[child].transform.SetParent(_gameObjects[parent].transform);
+        }
     }
 }

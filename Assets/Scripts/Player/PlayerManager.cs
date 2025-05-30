@@ -2,12 +2,14 @@
 using UnityEngine;
 
 using GameSystem;
+using Visuals;
 
 namespace Player
 {
     public class PlayerManager : IGameobject
     {
         private const string NAME = "Player";
+        private const string VISUAL = "PlayerVisual";
         
         private Rigidbody2D _rigidbody2D;
         private BoxCollider2D _boxCollider2D;
@@ -33,48 +35,24 @@ namespace Player
         private void CreateComponents()
         {
             GameobjectComponentLibrary.CreateGameObject(NAME);
+            GameobjectComponentLibrary.CreateGameObject(VISUAL);
+            GameobjectComponentLibrary.SetParent(VISUAL, NAME);
 
             _rigidbody2D = GameobjectComponentLibrary.AddComponent<Rigidbody2D>(NAME);
-            _spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>(NAME);
             _boxCollider2D = GameobjectComponentLibrary.AddComponent<BoxCollider2D>(NAME);
             _inputParser = GameobjectComponentLibrary.AddComponent<InputParser>(NAME);
             _playerMovement = GameobjectComponentLibrary.AddComponent<PlayerMovement>(NAME);
+            _spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>(VISUAL);
             
             _thisGameObject = GameobjectComponentLibrary.GetGameObject(NAME);
+            GameobjectComponentLibrary.GetGameObject(VISUAL).transform.rotation = Quaternion.Euler(0, 0, 225);
         }
 
         private void SetupComponents()
         {
             _rigidbody2D.gravityScale = 0;
 
-            // square
-            /*Texture2D tex = new Texture2D(100, 100);
-            tex.SetPixel(0, 0, Color.white);
-            tex.Apply();
-            _spriteRenderer.sprite = Sprite.Create(tex, new Rect(0, 0, 100, 100), new Vector2(0.5f, 0.5f));*/
-            
-            // triangle
-            Texture2D tex = new Texture2D(100, 100);
-
-            Color clear = new Color(0, 0, 0, 0);
-            Color[] pixels = new Color[100 * 100];
-            
-            for (int i = 0; i < pixels.Length; i++)
-                pixels[i] = clear;
-            
-            tex.SetPixels(pixels);
-
-            Color color = Color.white;
-            for (int y = 0; y < 100; y++)
-            {
-                for (int x = 0; x <= y; x++)
-                {
-                    tex.SetPixel(x, y, color);
-                }
-            }
-
-            tex.Apply();
-            _spriteRenderer.sprite = Sprite.Create(tex, new Rect(0, 0, 100, 100), new Vector2(0.5f, 0.5f));
+            SpriteMaker.MakeSprite(_spriteRenderer, ShapeType.TRIANGLE, Color.green);
             
             _boxCollider2D.size = Vector2.one;
             
@@ -82,6 +60,7 @@ namespace Player
             {
                 {"Move", _playerMovement}
             });
+            
             _inputParser.OnStart();
         }
     }
