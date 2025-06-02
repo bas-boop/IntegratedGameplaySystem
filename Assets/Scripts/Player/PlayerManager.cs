@@ -16,6 +16,8 @@ namespace Player
         private SpriteRenderer _spriteRenderer;
         private InputParser _inputParser;
         private PlayerMovement _playerMovement;
+        
+        private CameraFollower _cameraFollower;
 
         private GameObject _thisGameObject;
         
@@ -28,9 +30,14 @@ namespace Player
         public void OnUpdate()
         {
             _inputParser.OnUpdate();
+            _cameraFollower.OnUpdate();
         }
 
-        public void OnFixedUpdate() { }
+        public void OnFixedUpdate()
+        {
+            _inputParser.OnFixedUpdate();
+            _cameraFollower.OnFixedUpdate();
+        }
 
         private void CreateComponents()
         {
@@ -46,6 +53,9 @@ namespace Player
             
             _thisGameObject = GameobjectComponentLibrary.GetGameObject(NAME);
             GameobjectComponentLibrary.GetGameObject(VISUAL).transform.rotation = Quaternion.Euler(0, 0, 225);
+
+            GameobjectComponentLibrary.AddCamera();
+            _cameraFollower = GameobjectComponentLibrary.AddComponent<CameraFollower>("MainCamera");
         }
 
         private void SetupComponents()
@@ -62,6 +72,8 @@ namespace Player
             });
             
             _inputParser.OnStart();
+
+            _cameraFollower.SetObjectToFollow(_thisGameObject.transform);
         }
     }
 }

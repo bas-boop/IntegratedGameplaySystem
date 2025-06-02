@@ -31,6 +31,14 @@ namespace GameSystem
             return _gameObjects.Last().Value;
         }
 
+        public static GameObject AddCamera()
+        {
+            Camera cam = FindFirstObjectByType<Camera>();
+            _gameObjects.Add(cam.name, cam.gameObject);
+            Debug.Log(_gameObjects.Last().Value.gameObject.name);
+            return cam.gameObject;
+        }
+
         public static void SetParent(string child, string parent)
         {
             if (!_gameObjects.ContainsKey(child)

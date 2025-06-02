@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Visuals
 {
-    public class SpriteMaker
+    public static class SpriteMaker
     {
         private static readonly int _size = 100;
         private static readonly int _borderThickness = 5;

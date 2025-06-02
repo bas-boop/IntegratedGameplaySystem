@@ -26,11 +26,15 @@ namespace Player
             _playerMovement.SetInput(input);
         }
 
-        public void OnFixedUpdate() { }
+        public void OnFixedUpdate()
+        {
+            _playerMovement.OnFixedUpdate();
+        }
 
         public void SetInputReferences(Dictionary<string, MonoBehaviour> components)
         {
             _playerMovement = (PlayerMovement) components["Move"];
+            _playerMovement.OnStart();
         }
 
         private void GetReferences()
