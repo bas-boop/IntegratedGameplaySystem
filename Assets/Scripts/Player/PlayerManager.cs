@@ -61,10 +61,11 @@ namespace Player
         private void SetupComponents()
         {
             _rigidbody2D.gravityScale = 0;
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-            SpriteMaker.MakeSprite(_spriteRenderer, ShapeType.TRIANGLE, Color.green);
-            
             _boxCollider2D.size = Vector2.one;
+            
+            SpriteMaker.MakeSprite(_spriteRenderer, ShapeType.TRIANGLE, Color.green);
             
             _inputParser.SetInputReferences(new Dictionary<string, MonoBehaviour>()
             {

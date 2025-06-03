@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Gameplay.Enemies;
 using UnityEngine;
 
 using Player;
@@ -9,6 +10,7 @@ namespace GameSystem
     public sealed class TheGame : MonoBehaviour
     {
         private PlayerManager _playerManager;
+        private EnemyManager _enemyManager;
 
         private List<IGameobject> _gameobjects = new ();
         
@@ -53,11 +55,17 @@ namespace GameSystem
         private void CreateObjects()
         {
             _playerManager = new ();
+            
+            _enemyManager = new EnemyManager.EnemyBuilder()
+                .SetName("TheSquare")
+                .SetStartPosition(Vector2.one * 4)
+                .Build();
         }
 
         private void AddObjects()
         {
             _gameobjects.Add(_playerManager);
+            _gameobjects.Add(_enemyManager);
         }
     }
 }
