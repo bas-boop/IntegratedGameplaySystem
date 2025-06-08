@@ -16,12 +16,33 @@ namespace GameSystem
             return CreateGameObject(gameObjectName);
         }
         
+        public static GameObject GetGameObject<T>() where T : Component
+        {
+            return _gameObjects.Values.FirstOrDefault(go => go != null && go.GetComponent<T>() != null);
+        }
+
+        public static GameObject[] GetGameObjects<T>() where T : Component
+        {
+            return _gameObjects.Values
+                .Where(go => go != null && go.GetComponent<T>() != null)
+                .ToArray();
+        }
+        
+        public static T[] GetGameObjectComponents<T>() where T : Component
+        {
+            return _gameObjects.Values
+                .Select(go => go.GetComponent<T>())
+                .Where(component => component != null)
+                .ToArray();
+        }
+        
         public static T AddComponent<T>(string gameObjectName) where T : Component
         {
             if (_gameObjects.ContainsKey(gameObjectName))
-                return _gameObjects[gameObjectName].AddComponent<T>();;
+                return _gameObjects[gameObjectName].AddComponent<T>();
             
-            return null;
+            CreateGameObject(gameObjectName);
+            return _gameObjects[gameObjectName].AddComponent<T>();
         }
 
         public static GameObject CreateGameObject(string gameObjectName)

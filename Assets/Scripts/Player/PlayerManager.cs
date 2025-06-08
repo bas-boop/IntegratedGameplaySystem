@@ -2,6 +2,7 @@
 using UnityEngine;
 
 using GameSystem;
+using Gameplay.Shooter;
 using Visuals;
 
 namespace Player
@@ -16,6 +17,7 @@ namespace Player
         private SpriteRenderer _spriteRenderer;
         private InputParser _inputParser;
         private PlayerMovement _playerMovement;
+        private Shooter _shooter;
         
         private CameraFollower _cameraFollower;
 
@@ -31,6 +33,7 @@ namespace Player
         {
             _inputParser.OnUpdate();
             _cameraFollower.OnUpdate();
+            _shooter.ActivateShoot();
         }
 
         public void OnFixedUpdate()
@@ -49,6 +52,7 @@ namespace Player
             _boxCollider2D = GameobjectComponentLibrary.AddComponent<BoxCollider2D>(NAME);
             _inputParser = GameobjectComponentLibrary.AddComponent<InputParser>(NAME);
             _playerMovement = GameobjectComponentLibrary.AddComponent<PlayerMovement>(NAME);
+            _shooter = GameobjectComponentLibrary.AddComponent<Shooter>(NAME);
             _spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>(VISUAL);
             
             _thisGameObject = GameobjectComponentLibrary.GetGameObject(NAME);
@@ -63,7 +67,8 @@ namespace Player
             _rigidbody2D.gravityScale = 0;
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-            _boxCollider2D.size = Vector2.one;
+            _boxCollider2D.size = new (1, 0.5f);
+            _boxCollider2D.offset = new (0, 0.25f);
             
             SpriteMaker.MakeSprite(_spriteRenderer, ShapeType.TRIANGLE, Color.green);
             
