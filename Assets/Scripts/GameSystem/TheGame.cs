@@ -1,12 +1,10 @@
 using System.Collections.Generic;
+using Gameplay.Collision;
 using UnityEngine;
 
 using Gameplay.Enemies;
 using Player;
 using StateMachine;
-using Collider = Gameplay.Collision.Collider;
-using BoxCollider = Gameplay.Collision.BoxCollider;
-using SphereCollider = Gameplay.Collision.SphereCollider;
 
 namespace GameSystem
 {
@@ -67,13 +65,13 @@ namespace GameSystem
                 .Build();
             
             // temp
-            GameobjectComponentLibrary.AddComponent<SphereCollider>("yes");
-            GameobjectComponentLibrary.AddComponent<BoxCollider>("no");
-            GameobjectComponentLibrary.AddComponent<BoxCollider>("no2");
-            GameobjectComponentLibrary.AddComponent<BoxCollider>("no3");
-            GameobjectComponentLibrary.AddComponent<BoxCollider>("no4");
-            GameobjectComponentLibrary.AddComponent<BoxCollider>("no5");
-            GameobjectComponentLibrary.AddComponent<BoxCollider>("no6");
+            GameobjectComponentLibrary.AddComponent<SphereColliderX>("yes");
+            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no");
+            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no2");
+            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no3");
+            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no4");
+            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no5");
+            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no6");
         }
 
         private void AddObjects()
@@ -84,22 +82,16 @@ namespace GameSystem
 
         private void UpdateCollision()
         {
-            Collider[] allColliders = GameobjectComponentLibrary.GetGameObjectComponents<Gameplay.Collision.Collider>();
+            ColliderX[] allColliders = GameobjectComponentLibrary.GetGameObjectComponents<ColliderX>();
 
             for (int i = 0; i < allColliders.Length; i++)
             {
-                Collider colliderA = allColliders[i];
-                Debug.Log(colliderA);
+                ColliderX colliderA = allColliders[i];
 
                 for (int j = i + 1; j < allColliders.Length; j++)
                 {
-                    Collider colliderB = allColliders[j];
-                    Debug.Log(colliderB);
-                    
-                    if (colliderA.IsColliding(colliderB).Item1)
-                    {
-                        Debug.Log(colliderA + " " + colliderB);
-                    }
+                    ColliderX colliderB = allColliders[j];
+                    colliderA.IsColliding(colliderB);
                 }
             }
         }

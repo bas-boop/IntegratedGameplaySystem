@@ -1,4 +1,5 @@
-﻿using GameSystem;
+﻿using Gameplay.Collision;
+using GameSystem;
 using UnityEngine;
 using Visuals;
 
@@ -14,6 +15,7 @@ namespace Gameplay.Enemies
         private Rigidbody2D _rigidbody2D;
         private BoxCollider2D _boxCollider2D;
         private SpriteRenderer _spriteRenderer;
+        private BoxColliderX _collider;
 
         private GameObject _thisGameObject;
         
@@ -41,6 +43,7 @@ namespace Gameplay.Enemies
 
             _rigidbody2D = GameobjectComponentLibrary.AddComponent<Rigidbody2D>(_name);
             _boxCollider2D = GameobjectComponentLibrary.AddComponent<BoxCollider2D>(_name);
+            _collider = GameobjectComponentLibrary.AddComponent<BoxColliderX>(_name);
             _spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>(_visual);
             
             _thisGameObject = GameobjectComponentLibrary.GetGameObject(_name);

@@ -28,12 +28,29 @@ namespace GameSystem
                 .ToArray();
         }
         
+        public static T GetGameObjectComponent<T>() where T : Component
+        {
+            return _gameObjects.Values
+                .Select(go => go.GetComponent<T>())
+                .LastOrDefault(component => component != null);
+        }
+        
         public static T[] GetGameObjectComponents<T>() where T : Component
         {
             return _gameObjects.Values
                 .Select(go => go.GetComponent<T>())
                 .Where(component => component != null)
                 .ToArray();
+        }
+
+        public static bool RemoveGameobject(string gameObjectName)
+        {
+            if (!_gameObjects.TryGetValue(gameObjectName, out GameObject o))
+                return false;
+            
+            Destroy(o);
+            return true;
+
         }
         
         public static T AddComponent<T>(string gameObjectName) where T : Component
@@ -47,6 +64,9 @@ namespace GameSystem
 
         public static GameObject CreateGameObject(string gameObjectName)
         {
+            if (_gameObjects.ContainsKey(gameObjectName))
+                return _gameObjects[gameObjectName];
+            
             GameObject newGameObject = new (gameObjectName);
             _gameObjects.Add(newGameObject.name, newGameObject);
             return _gameObjects.Last().Value;

@@ -1,24 +1,23 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Gameplay.Collision
 {
-    public class SphereCollider : Collider
+    public class SphereColliderX : ColliderX
     {
         public float radius = 0.5f;
 
-        public override (bool, GameObject) IsColliding(Collider other)
+        public override (bool, GameObject) IsColliding(ColliderX other)
         {
             (bool, GameObject) tuple = (false, null);
             
             switch (other)
             {
-                case SphereCollider sphere:
+                case SphereColliderX sphere:
                     float dist = Vector3.Distance(transform.position, sphere.transform.position);
                     tuple = (dist < radius + sphere.radius, other.gameObject);
                     break;
                 
-                case BoxCollider box:
+                case BoxColliderX box:
                     Vector3 closest = Vector3.Max(box.Bounds.min,
                                   Vector3.Min(transform.position, box.Bounds.max));
                     float distSq = (closest - transform.position).sqrMagnitude;

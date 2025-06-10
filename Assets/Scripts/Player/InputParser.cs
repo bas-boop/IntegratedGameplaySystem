@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Gameplay.Shooter;
 using GameSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,6 +13,7 @@ namespace Player
         private InputActionAsset _inputActionAsset;
 
         private PlayerMovement _playerMovement;
+        private Shooter _shooter;
         
         public void OnStart()
         {
@@ -33,6 +35,7 @@ namespace Player
 
         public void SetInputReferences(Dictionary<string, MonoBehaviour> components)
         {
+            _shooter = (Shooter) components["Shoot"];
             _playerMovement = (PlayerMovement) components["Move"];
             _playerMovement.OnStart();
         }
@@ -46,7 +49,7 @@ namespace Player
         {
             InputActionMap actionMap = new InputActionMap("Gameplay");
 
-            InputAction jumpAction = actionMap.AddAction("Jump", binding: "<Keyboard>/space");
+            InputAction jumpAction = actionMap.AddAction("Shoot", binding: "<Keyboard>/space");
             InputAction moveAction = actionMap.AddAction("Move", InputActionType.Value, "Vector2");
 
             moveAction.AddCompositeBinding("2DVector")
@@ -65,17 +68,17 @@ namespace Player
 
         private void AddListeners()
         {
-            _inputActionAsset["Jump"].performed += JumpAction;
+            _inputActionAsset["Shoot"].performed += ShootAction;
         }
 
         private void RemoveListeners()
         {
-            _inputActionAsset["Jump"].performed -= JumpAction;
+            _inputActionAsset["Shoot"].performed -= ShootAction;
         }
         
         #region Context
         
-        private void JumpAction(InputAction.CallbackContext context) => Debug.Log("jump");
+        private void ShootAction(InputAction.CallbackContext context) => _shooter.ActivateShoot();
 
         #endregion
     }
