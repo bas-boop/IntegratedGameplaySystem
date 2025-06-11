@@ -8,6 +8,8 @@ namespace Gameplay.Shooter
 {
     public sealed class Shooter : MonoBehaviour
     {
+        private const string NAME = "Bullet";
+        
         private Bullet _bullet;
         private float _shootInterval = 0.5f;
         private bool _isShooting;
@@ -18,13 +20,13 @@ namespace Gameplay.Shooter
         {
             _firePoint = firePoint;
             
-            GameobjectComponentLibrary.CreateGameObject("Bullet");
-            _bullet = GameobjectComponentLibrary.AddComponent<Bullet>("Bullet");
-            SpriteRenderer spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>("Bullet");
+            GameobjectComponentLibrary.CreateGameObject(NAME);
+            _bullet = GameobjectComponentLibrary.AddComponent<Bullet>(NAME);
+            SpriteRenderer spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>(NAME);
             SpriteMaker.MakeSprite(spriteRenderer, ShapeType.CIRCLE, Color.blue);
-            GameobjectComponentLibrary.GetGameObject("Bullet").transform.localScale = Vector3.one * 0.3f;
+            GameobjectComponentLibrary.GetGameObject(NAME).transform.localScale = Vector3.one * 0.3f;
 
-            _bulletPool = new (null, _bullet);
+            _bulletPool = new (transform, _bullet);
             _bulletPool.OnStart();
 
             _bullet.gameObject.SetActive(false);

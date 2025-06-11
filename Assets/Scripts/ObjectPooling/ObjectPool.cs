@@ -45,8 +45,6 @@ namespace ObjectPooling
                 ? CreateObject(targetParent)
                 : _objectQueue.Dequeue();
             
-            Debug.Log(pooledObject.name);
-            
             pooledObject.Activate(position, rotation);
             _dequeuedObjects.Add(pooledObject);
             return pooledObject;
@@ -84,6 +82,9 @@ namespace ObjectPooling
         /// <param name="obj">The object to be returned to the pool.</param>
         public void ReturnObject(T obj)
         {
+            if (_objectQueue.Contains(obj))
+                return;
+            
             obj.Deactivate();
             _objectQueue.Enqueue(obj);
             _dequeuedObjects.Remove(obj);

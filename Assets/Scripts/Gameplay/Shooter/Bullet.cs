@@ -1,7 +1,7 @@
-﻿using Gameplay.Collision;
-using UnityEngine;
+﻿using UnityEngine;
 
 using GameSystem;
+using Gameplay.Collision;
 using ObjectPooling;
 using Visuals;
 
@@ -9,6 +9,8 @@ namespace Gameplay.Shooter
 {
     public class Bullet : MonoBehaviour, IPoolable<Bullet>
     {
+        private float _speed = 5;
+        private float _despawnTime = 20;
         private SphereColliderX _collider;
         private SpriteRenderer _spriteRenderer;
         private Rigidbody2D _rb;
@@ -47,13 +49,19 @@ namespace Gameplay.Shooter
             transform.rotation = rotation;
             
             gameObject.SetActive(true);
-            _rb.linearVelocityY = 5;
+            _collider.enabled = true;
+            
+            Vector2 moveDirection = transform.up * _speed;
+            _rb.AddForce(moveDirection, ForceMode2D.Impulse);
+            
+            Invoke(nameof(ReturnToPool), _despawnTime);
         }
 
         public void Deactivate()
         {
             gameObject.SetActive(false);
-            _rb.linearVelocityY = 0;
+            _collider.enabled = false;
+            _rb.linearVelocity = Vector2.zero;
         }
 
         public void ReturnToPool()
