@@ -71,7 +71,7 @@ namespace Gameplay.Shooter
 
         private void OnCollide(GameObject other)
         {
-            if (other.name == "TheSquareEnemy")
+            if (other.CompareTag(Tags.ENEMY_TAG))
                 ReturnToPool();
         }
     }

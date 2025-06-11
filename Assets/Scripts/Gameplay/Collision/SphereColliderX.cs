@@ -28,6 +28,7 @@ namespace Gameplay.Collision
             if (tuple.Item1)
             {
                 OnCollision?.Invoke(other.gameObject);
+                other.OnCollision?.Invoke(gameObject);
             }
 
             return tuple;

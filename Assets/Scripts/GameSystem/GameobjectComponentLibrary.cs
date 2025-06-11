@@ -43,14 +43,20 @@ namespace GameSystem
                 .ToArray();
         }
 
+        /// <summary>
+        /// Beware of any child objects.
+        /// </summary>
+        /// <param name="gameObjectName"></param>
+        /// <returns></returns>
         public static bool RemoveGameobject(string gameObjectName)
         {
             if (!_gameObjects.TryGetValue(gameObjectName, out GameObject o))
                 return false;
             
+            _gameObjects.Remove(gameObjectName);
             Destroy(o);
+            
             return true;
-
         }
         
         public static T AddComponent<T>(string gameObjectName) where T : Component
@@ -76,7 +82,6 @@ namespace GameSystem
         {
             Camera cam = FindFirstObjectByType<Camera>();
             _gameObjects.Add(cam.name, cam.gameObject);
-            Debug.Log(_gameObjects.Last().Value.gameObject.name);
             return cam.gameObject;
         }
 

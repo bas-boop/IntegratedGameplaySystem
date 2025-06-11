@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Gameplay.Collision;
 using UnityEngine;
 
+using Gameplay.Collision;
 using Gameplay.Enemies;
 using Player;
 using StateMachine;
@@ -63,15 +63,6 @@ namespace GameSystem
                 .SetName("TheSquareEnemy")
                 .SetStartPosition(Vector2.one * 4)
                 .Build();
-            
-            // temp
-            GameobjectComponentLibrary.AddComponent<SphereColliderX>("yes");
-            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no");
-            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no2");
-            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no3");
-            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no4");
-            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no5");
-            GameobjectComponentLibrary.AddComponent<BoxColliderX>("no6");
         }
 
         private void AddObjects()
@@ -91,7 +82,10 @@ namespace GameSystem
                 for (int j = i + 1; j < allColliders.Length; j++)
                 {
                     ColliderX colliderB = allColliders[j];
-                    colliderA.IsColliding(colliderB);
+                    
+                    if (colliderA.enabled
+                        && colliderB.enabled)
+                        colliderA.IsColliding(colliderB);
                 }
             }
         }

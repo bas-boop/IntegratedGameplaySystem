@@ -1,6 +1,8 @@
-﻿using Gameplay.Collision;
+﻿using UnityEngine;
+
+using Gameplay.Collision;
+using Gameplay.HealthSystem;
 using GameSystem;
-using UnityEngine;
 using Visuals;
 
 namespace Gameplay.Enemies
@@ -16,6 +18,7 @@ namespace Gameplay.Enemies
         private BoxCollider2D _boxCollider2D;
         private SpriteRenderer _spriteRenderer;
         private BoxColliderX _collider;
+        private Health _health;
 
         private GameObject _thisGameObject;
         
@@ -47,6 +50,13 @@ namespace Gameplay.Enemies
             _spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>(_visual);
             
             _thisGameObject = GameobjectComponentLibrary.GetGameObject(_name);
+            _thisGameObject.tag = Tags.ENEMY_TAG;
+
+            _health = new (3);
+            _health.AddDamageListener(() => Debug.Log("pain"));
+            _health.AddDieListener(Remove);
+            
+            _collider.AddListener(OnCol);
         }
         
         private void SetupComponents()
@@ -58,6 +68,18 @@ namespace Gameplay.Enemies
             SpriteMaker.MakeSprite(_spriteRenderer, ShapeType.SQUARE, Color.red);
 
             _thisGameObject.transform.position = _startPosition;
+        }
+
+        private void OnCol(GameObject other)
+        {
+            _health.RemoveHealth(1);
+        }
+
+        private void Remove()
+        {
+            _collider = null;
+            GameobjectComponentLibrary.RemoveGameobject(_visual);
+            GameobjectComponentLibrary.RemoveGameobject(_name);
         }
         
         public class EnemyBuilder

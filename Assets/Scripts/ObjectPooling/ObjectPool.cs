@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System.Collections.Generic;
 using UnityEngine;
 
 using GameSystem;
@@ -118,7 +120,7 @@ namespace ObjectPooling
 
             _objectQueue.Clear();
             _dequeuedObjects.Clear();
-            CreateObjects(INITIAL_SIZE, null);
+            CreateObjects(INITIAL_SIZE, null!);
         }
         
         private T CreateObject(Transform? targetParent)

@@ -20,7 +20,7 @@ namespace Player
         private InputParser _inputParser;
         private PlayerMovement _playerMovement;
         private Shooter _shooter;
-        private BoxColliderX _collider;
+        private SphereColliderX _collider;
         
         private CameraFollower _cameraFollower;
 
@@ -58,10 +58,11 @@ namespace Player
             _inputParser = GameobjectComponentLibrary.AddComponent<InputParser>(NAME);
             _playerMovement = GameobjectComponentLibrary.AddComponent<PlayerMovement>(NAME);
             _shooter = GameobjectComponentLibrary.AddComponent<Shooter>(NAME);
-            _collider = GameobjectComponentLibrary.AddComponent<BoxColliderX>(NAME);
+            _collider = GameobjectComponentLibrary.AddComponent<SphereColliderX>(NAME);
             _spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>(VISUAL);
             
             _thisGameObject = GameobjectComponentLibrary.GetGameObject(NAME);
+            _thisGameObject.tag = Tags.PLAYER_TAG;
             GameobjectComponentLibrary.GetGameObject(VISUAL).transform.rotation = Quaternion.Euler(0, 0, 225);
             GameobjectComponentLibrary.GetGameObject(FIREPOINT).transform.position = new (0, 0.7f);
 
@@ -73,8 +74,7 @@ namespace Player
         {
             _rigidbody2D.gravityScale = 0;
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-            _collider.size = new (1, 0.5f);
+            
             _boxCollider2D.size = new (1, 0.5f);
             _boxCollider2D.offset = new (0, 0.25f);
             
