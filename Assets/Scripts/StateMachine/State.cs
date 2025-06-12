@@ -9,6 +9,7 @@
         public abstract void DoEnter();
         public abstract void DoExit();
         public abstract void DoUpdate();
+        public abstract void DoFixedUpdate();
 
         public void Init(FSM owner, DictWrapper sharedData)
         {

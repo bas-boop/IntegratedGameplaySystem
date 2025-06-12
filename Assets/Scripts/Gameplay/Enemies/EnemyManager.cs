@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 using Gameplay.Collision;
 using Gameplay.HealthSystem;
 using GameSystem;
+using StateMachine;
 using Visuals;
 
 namespace Gameplay.Enemies
@@ -17,10 +19,12 @@ namespace Gameplay.Enemies
         private Rigidbody2D _rigidbody2D;
         private BoxCollider2D _boxCollider2D;
         private SpriteRenderer _spriteRenderer;
+        private GameObject _thisGameObject;
+
         private BoxTrigger _collider;
         private Health _health;
-
-        private GameObject _thisGameObject;
+        private FSM _fsm;
+        private List<State> _states;
         
         public void OnStart()
         {
@@ -30,12 +34,12 @@ namespace Gameplay.Enemies
 
         public void OnUpdate()
         {
-            
+            _fsm.UpdateState();
         }
 
         public void OnFixedUpdate()
         {
-            
+            _fsm.FixedUpdateState();
         }
 
         private void CreateComponents()
@@ -57,6 +61,22 @@ namespace Gameplay.Enemies
             _health.AddDieListener(Remove);
             
             _collider.AddListener(OnCol);
+
+            _states = new List<State>()
+            {
+                new Idle(),
+                new Wander(),
+                new Attack(GameobjectComponentLibrary.GetGameObject("Player").transform),
+            };
+            _fsm = new (_states);
+            
+            _fsm.sharedData.Set("Idle", _states[0]);
+            _fsm.sharedData.Set("Wander", _states[1]);
+            _fsm.sharedData.Set("Attack", _states[2]);
+            _fsm.sharedData.Set("Transform", _thisGameObject.transform);
+            _fsm.sharedData.Set("Rb", _rigidbody2D);
+            
+            _fsm.SwitchState(_states[0]);
         }
         
         private void SetupComponents()
@@ -77,6 +97,7 @@ namespace Gameplay.Enemies
 
         private void Remove()
         {
+            _fsm = null;
             _collider = null;
             GameobjectComponentLibrary.RemoveGameobject(_visual);
             GameobjectComponentLibrary.RemoveGameobject(_name);

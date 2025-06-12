@@ -5,7 +5,6 @@ using Event;
 using Gameplay.Collision;
 using Gameplay.Enemies;
 using Player;
-using StateMachine;
 
 namespace GameSystem
 {
@@ -51,9 +50,6 @@ namespace GameSystem
             {
                 gameobject.OnStart();
             }
-
-            TestFSM t = new TestFSM();
-            t.Yes();
             
             EventObserver.AddListener(ObserverEventType.GAME_BEGIN,
                 () => GameobjectComponentLibrary.GetUiElement("Controls").alpha = 0);
