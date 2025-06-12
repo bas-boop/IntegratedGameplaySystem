@@ -3,7 +3,8 @@
     public enum ObserverEventType
     {
         GAME_BEGIN,
-        GAME_END,
-        PLAYER_HEALTH
+        GAME_END_LOSE,
+        GAME_END_WON,
+        ENEMY_COUNT,
     }
 }

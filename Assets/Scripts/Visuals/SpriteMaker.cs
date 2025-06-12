@@ -5,34 +5,35 @@ namespace Visuals
 {
     public static class SpriteMaker
     {
-        private static readonly int _size = 100;
-        private static readonly int _borderThickness = 5;
-        private static readonly float _borderColorDarkness = 0.4f;
-        private static readonly Color _clear = Color.clear;
-        private static readonly Color[] _pixels = new Color[_size * _size];
+        private const int SIZE = 100;
+        private const int BORDER_THICKNESS = 5;
+        private const float BORDER_COLOR_DARKNESS = 0.4f;
+        
+        private static readonly Color clear = Color.clear;
+        private static readonly Color[] pixels = new Color[SIZE * SIZE];
         
         public static void MakeSprite(SpriteRenderer spriteRenderer, ShapeType shapeType, Color color)
         {
-            Texture2D tex = new (_size, _size);
-            Color outlineColor = color * _borderColorDarkness;
+            Texture2D tex = new (SIZE, SIZE);
+            Color outlineColor = color * BORDER_COLOR_DARKNESS;
             
-            for (int i = 0; i < _pixels.Length; i++)
-                _pixels[i] = _clear;
+            for (int i = 0; i < pixels.Length; i++)
+                pixels[i] = clear;
             
-            tex.SetPixels(_pixels);
+            tex.SetPixels(pixels);
 
             switch (shapeType)
             {
                 case ShapeType.SQUARE:
-                    DrawSquare(_size, _borderThickness, tex, color, outlineColor);
+                    DrawSquare(SIZE, BORDER_THICKNESS, tex, color, outlineColor);
                     break;
 
                 case ShapeType.TRIANGLE:
-                    DrawTriangle(_size, _borderThickness, tex, color, outlineColor);
+                    DrawTriangle(SIZE, BORDER_THICKNESS, tex, color, outlineColor);
                     break;
 
                 case ShapeType.CIRCLE:
-                    DrawCircle(_size, _borderThickness, tex, color, outlineColor);
+                    DrawCircle(SIZE, BORDER_THICKNESS, tex, color, outlineColor);
                     break;
 
                 default:
@@ -40,7 +41,7 @@ namespace Visuals
             }
 
             tex.Apply();
-            spriteRenderer.sprite = Sprite.Create(tex, new (0, 0, _size, _size), Vector2.one * 0.5f);
+            spriteRenderer.sprite = Sprite.Create(tex, new (0, 0, SIZE, SIZE), Vector2.one * 0.5f);
         }
 
         #region Draw

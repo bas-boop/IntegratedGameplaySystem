@@ -1,5 +1,6 @@
-﻿using StateMachine;
-using UnityEngine;
+﻿using UnityEngine;
+
+using StateMachine;
 
 namespace Gameplay.Enemies
 {
@@ -14,7 +15,7 @@ namespace Gameplay.Enemies
 
         public override void DoEnter()
         {
-            _ourRb = sharedData.Get<Rigidbody2D>("Rb");
+            _ourRb = p_sharedData.Get<Rigidbody2D>("Rb");
             _wanderArea = new Rect(Vector2.one * -25, Vector2.one * 50);
             PickNewWanderPosition();
         }
@@ -33,7 +34,7 @@ namespace Gameplay.Enemies
             _ourRb.AddForce(direction * (SPEED * Time.deltaTime));
 
             if (Vector2.Distance(currentPosition, _positionToWanderTo) <= ARRIVE_THRESHOLD)
-                owner.SwitchState(sharedData.Get<Idle>("Idle"));
+                p_owner.SwitchState(p_sharedData.Get<Idle>("Idle"));
         }
 
         private void PickNewWanderPosition()
@@ -41,8 +42,6 @@ namespace Gameplay.Enemies
             float x = Random.Range(_wanderArea.xMin, _wanderArea.xMax);
             float y = Random.Range(_wanderArea.yMin, _wanderArea.yMax);
             _positionToWanderTo = new (x, y);
-            
-            Debug.Log($"Current pos: {_ourRb.position}\nTo: {_positionToWanderTo}");
         }
     }
 }

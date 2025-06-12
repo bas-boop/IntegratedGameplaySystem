@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+using Event;
 using Gameplay.Collision;
 using Gameplay.HealthSystem;
 using GameSystem;
@@ -15,6 +16,7 @@ namespace Gameplay.Enemies
         private string _visual = "EnemyVisual";
 
         private Vector2 _startPosition;
+        private float _size;
         
         private Rigidbody2D _rigidbody2D;
         private BoxCollider2D _boxCollider2D;
@@ -34,12 +36,12 @@ namespace Gameplay.Enemies
 
         public void OnUpdate()
         {
-            _fsm.UpdateState();
+            _fsm?.UpdateState();
         }
 
         public void OnFixedUpdate()
         {
-            _fsm.FixedUpdateState();
+            _fsm?.FixedUpdateState();
         }
 
         private void CreateComponents()
@@ -55,11 +57,12 @@ namespace Gameplay.Enemies
             
             _thisGameObject = GameobjectComponentLibrary.GetGameObject(_name);
             _thisGameObject.tag = Tags.ENEMY_TAG;
+            _thisGameObject.transform.localScale = Vector3.one * _size;
 
             _health = new (3);
-            //_health.AddDamageListener(() => Debug.Log("pain"));
             _health.AddDieListener(Remove);
-            
+
+            _collider.size = Vector3.one * _size;
             _collider.AddListener(OnCol);
 
             _states = new List<State>()
@@ -92,11 +95,14 @@ namespace Gameplay.Enemies
 
         private void OnCol(GameObject other)
         {
-            _health.Damage(1);
+            if (other.CompareTag(Tags.BULLET_TAG))
+                _health.Damage(1);
         }
 
         private void Remove()
         {
+            EventObserver.InvokeEvent(ObserverEventType.ENEMY_COUNT);
+            
             _fsm = null;
             _collider = null;
             GameobjectComponentLibrary.RemoveGameobject(_visual);
@@ -117,6 +123,12 @@ namespace Gameplay.Enemies
             public EnemyBuilder SetStartPosition(Vector2 startPos)
             {
                 _enemy._startPosition = startPos;
+                return this;
+            }
+            
+            public EnemyBuilder SetSize(float size)
+            {
+                _enemy._size = size;
                 return this;
             }
 

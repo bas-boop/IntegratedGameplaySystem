@@ -101,14 +101,7 @@ namespace GameSystem
         public static TMP_Text GetUiElement(string textElementName)
         {
             TMP_Text[] texts = FindObjectsByType<TMP_Text>(FindObjectsSortMode.None);
-
-            foreach (TMP_Text text in texts)
-            {
-                if (text.name == textElementName)
-                    return text;
-            }
-
-            return null;
+            return texts.FirstOrDefault(text => text.name == textElementName);
         }
     }
 }

@@ -12,6 +12,9 @@ namespace GameSystem
     {
         private PlayerManager _playerManager;
         private EnemyManager _enemyManager;
+        private EnemyManager _enemyManager1;
+        private EnemyManager _enemyManager2;
+        private EnemyUi _enemyUi;
 
         private List<IGameobject> _gameobjects = new ();
         
@@ -50,11 +53,11 @@ namespace GameSystem
             {
                 gameobject.OnStart();
             }
+
+            _enemyUi = new (3, GameobjectComponentLibrary.GetUiElement("Enemies"));
+            _enemyUi.UpdateUi();
             
-            EventObserver.AddListener(ObserverEventType.GAME_BEGIN,
-                () => GameobjectComponentLibrary.GetUiElement("Controls").alpha = 0);
-            EventObserver.AddListener(ObserverEventType.GAME_END,
-                () => GameobjectComponentLibrary.GetUiElement("GameLost").alpha = 1);
+            AddEvents();
         }
 
         private void CreateObjects()
@@ -64,6 +67,19 @@ namespace GameSystem
             _enemyManager = new EnemyManager.EnemyBuilder()
                 .SetName("TheSquareEnemy")
                 .SetStartPosition(Vector2.one * 4)
+                .SetSize(2)
+                .Build();
+            
+            _enemyManager1 = new EnemyManager.EnemyBuilder()
+                .SetName("TheSquareEnemy1")
+                .SetStartPosition(Vector2.one * 25)
+                .SetSize(5)
+                .Build();
+            
+            _enemyManager2 = new EnemyManager.EnemyBuilder()
+                .SetName("TheSquareEnemy2")
+                .SetStartPosition(Vector2.one * -10)
+                .SetSize(0.75f)
                 .Build();
         }
 
@@ -71,6 +87,8 @@ namespace GameSystem
         {
             _gameobjects.Add(_playerManager);
             _gameobjects.Add(_enemyManager);
+            _gameobjects.Add(_enemyManager1);
+            _gameobjects.Add(_enemyManager2);
         }
 
         private void UpdateCollision()
@@ -90,6 +108,22 @@ namespace GameSystem
                         colliderA.IsColliding(colliderB);
                 }
             }
+        }
+
+        private void AddEvents()
+        {
+            EventObserver.AddListener(ObserverEventType.ENEMY_COUNT, () => _enemyUi.UpdateUi());
+            
+            EventObserver.AddListener(ObserverEventType.GAME_BEGIN,
+                () => GameobjectComponentLibrary.GetUiElement("Controls").alpha = 0);
+            
+            EventObserver.AddListener(ObserverEventType.GAME_END_LOSE,
+                () => GameobjectComponentLibrary.GetUiElement("GameLost").alpha = 1);
+            
+            EventObserver.AddListener(ObserverEventType.GAME_END_WON,
+                () => GameobjectComponentLibrary.GetUiElement("GameLost").alpha = 1);
+            EventObserver.AddListener(ObserverEventType.GAME_END_WON,
+                () => GameobjectComponentLibrary.GetUiElement("GameLost").text = "You won");
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using Gameplay.Shooter;
-using GameSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+using Gameplay.Shooter;
+using GameSystem;
 
 namespace Player
 {
@@ -66,20 +67,10 @@ namespace Player
         }
 
 
-        private void AddListeners()
-        {
-            _inputActionAsset["Shoot"].performed += ShootAction;
-        }
+        private void AddListeners() => _inputActionAsset["Shoot"].performed += ShootAction;
 
-        private void RemoveListeners()
-        {
-            _inputActionAsset["Shoot"].performed -= ShootAction;
-        }
-        
-        #region Context
-        
+        private void RemoveListeners() => _inputActionAsset["Shoot"].performed -= ShootAction;
+
         private void ShootAction(InputAction.CallbackContext context) => _shooter.ActivateShoot();
-
-        #endregion
     }
 }

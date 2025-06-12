@@ -9,10 +9,10 @@ namespace Gameplay.Shooter
     public sealed class Shooter : MonoBehaviour
     {
         private const string NAME = "Bullet";
+        private const float SHOOT_INTERVAL = 0.5f;
         
-        private Bullet _bullet;
-        private float _shootInterval = 0.5f;
         private bool _isShooting;
+        private Bullet _bullet;
         private Transform _firePoint;
         private ObjectPool<Bullet> _bulletPool;
 
@@ -45,13 +45,9 @@ namespace Gameplay.Shooter
         {
             _isShooting = true;
             _bulletPool.GetObject(_firePoint.position, _firePoint.rotation, null);
-            //Instantiate(_bullet, _firePoint.position, _firePoint.rotation); // objectpooling
-            Invoke(nameof(SetIsShooting), _shootInterval);
+            Invoke(nameof(SetIsShooting), SHOOT_INTERVAL);
         }
 
-        private void SetIsShooting()
-        {
-            _isShooting = false;
-        }
+        private void SetIsShooting() => _isShooting = false;
     }
 }

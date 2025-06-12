@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 using StateMachine;
 
@@ -22,8 +21,8 @@ namespace Gameplay.Enemies
         
         public override void DoEnter()
         {
-            _ourRb = sharedData.Get<Rigidbody2D>("Rb");
-            _ourTransform = sharedData.Get<Transform>("Transform");
+            _ourRb = p_sharedData.Get<Rigidbody2D>("Rb");
+            _ourTransform = p_sharedData.Get<Transform>("Transform");
             
             _chaseTimer = new (TIME_TO_CHASE);
             _chaseTimer.OnTimerDone += DoneChasing;
@@ -56,7 +55,7 @@ namespace Gameplay.Enemies
             _chaseTimer.OnTimerDone = null;
             _chaseTimer.Stop();
             
-            owner.SwitchState(sharedData.Get<Idle>("Idle"));
+            p_owner.SwitchState(p_sharedData.Get<Idle>("Idle"));
         }
     }
 }

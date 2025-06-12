@@ -5,12 +5,13 @@ namespace Gameplay.Collision
 {
     public abstract class Trigger : MonoBehaviour
     {
-        public Action<GameObject> OnCollision;
-        public float WasActivetedTime = 1;
+        public float wasActivetedTime = 1;
+        
+        private Action<GameObject> _onCollision;
         
         public abstract (bool, GameObject) IsColliding(Trigger other);
 
-        public void AddListener(Action<GameObject> collisionAction) => OnCollision += collisionAction;
+        public void AddListener(Action<GameObject> collisionAction) => _onCollision += collisionAction;
         
         protected void TurnColliderBackOn()
         {
@@ -20,16 +21,16 @@ namespace Gameplay.Collision
         private void TurnColliderOff()
         {
             this.enabled = false;
-            Invoke(nameof(TurnColliderBackOn), WasActivetedTime);
+            Invoke(nameof(TurnColliderBackOn), wasActivetedTime);
         }
 
         protected void OnCollisionSucces(Trigger other)
         {
-            OnCollision?.Invoke(other.gameObject);
-            other.OnCollision?.Invoke(gameObject);
+            _onCollision?.Invoke(other.gameObject);
+            other._onCollision?.Invoke(gameObject);
 
             this.enabled = false;
-            Invoke(nameof(TurnColliderBackOn), WasActivetedTime);
+            Invoke(nameof(TurnColliderBackOn), wasActivetedTime);
             other.TurnColliderOff();
         }
     }

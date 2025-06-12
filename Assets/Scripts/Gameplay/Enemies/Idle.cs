@@ -29,9 +29,9 @@ namespace Gameplay.Enemies
             _idleTimer.Stop();
 
             if (CoinFlip.Flip())
-                owner.SwitchState(sharedData.Get<Wander>("Wander"));
+                p_owner.SwitchState(p_sharedData.Get<Wander>("Wander"));
             else
-                owner.SwitchState(sharedData.Get<Attack>("Attack"));
+                p_owner.SwitchState(p_sharedData.Get<Attack>("Attack"));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Gameplay.Collision
                     break;
             }
 
-            if (tuple.Item1)
+            if (tuple.Item1) // checking the bool
                 OnCollisionSucces(other);
 
             return tuple;

@@ -5,26 +5,25 @@ namespace Event
 {
     public static class EventObserver
     {
-        private static readonly Dictionary<ObserverEventType, Action> _eventDict = new();
+        private static readonly Dictionary<ObserverEventType, Action> eventDict = new();
 
         public static void AddListener(ObserverEventType type, Action func)
         {
-            _eventDict.TryAdd(type, null); // checks of the type is already in the dict or not
-            _eventDict[type] += func;
+            eventDict.TryAdd(type, null); // checks of the type is already in the dict or not
+            eventDict[type] += func;
         }
         
         public static void RemoveListener(ObserverEventType type, Action func)
         {
-            if (_eventDict.ContainsKey(type)
-                && _eventDict[type] != null)
-            {
-                _eventDict[type] -= func;
-            }
+            if (eventDict.ContainsKey(type)
+                && eventDict[type] != null)
+                eventDict[type] -= func;
         }
         
         public static void InvokeEvent(ObserverEventType type)
         {
-            _eventDict[type]?.Invoke();
+            if (eventDict.TryGetValue(type, out Action value))
+                value?.Invoke();
         }
     }
 }

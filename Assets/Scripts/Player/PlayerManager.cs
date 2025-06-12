@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Event;
 using UnityEngine;
 
+using Event;
 using GameSystem;
 using Gameplay.Collision;
 using Gameplay.HealthSystem;
@@ -110,9 +110,7 @@ namespace Player
         
         private void Die()
         {
-            Debug.Log("Player died!");
-            
-            EventObserver.InvokeEvent(ObserverEventType.GAME_END);
+            EventObserver.InvokeEvent(ObserverEventType.GAME_END_LOSE);
             
             _collider = null;
             GameobjectComponentLibrary.RemoveGameobject(VISUAL);

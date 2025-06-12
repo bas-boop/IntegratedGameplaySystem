@@ -36,6 +36,8 @@ namespace Gameplay.Shooter
             _collider.radius = 0.15f;
             _collider.AddListener(OnCollide);
             _collider.enabled = false;
+
+            tag = Tags.BULLET_TAG;
         }
 
         public void Delete()

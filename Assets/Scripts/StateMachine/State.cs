@@ -2,9 +2,10 @@
 {
     public abstract class State
     {
-        public FSM owner;
         public bool isInit;
-        public DictWrapper sharedData;
+        
+        protected FSM p_owner;
+        protected DictWrapper p_sharedData;
         
         public abstract void DoEnter();
         public abstract void DoExit();
@@ -13,8 +14,8 @@
 
         public void Init(FSM owner, DictWrapper sharedData)
         {
-            this.owner = owner;
-            this.sharedData = sharedData;
+            p_owner = owner;
+            p_sharedData = sharedData;
             isInit = true;
         }
     }

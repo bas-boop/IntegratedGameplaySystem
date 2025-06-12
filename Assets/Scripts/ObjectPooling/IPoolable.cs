@@ -16,7 +16,6 @@ namespace ObjectPooling
         /// </summary>
         /// <param name="position">The position to place the object.</param>
         /// <param name="rotation">The rotation of the object.</param>
-        /// <param name="objectPool">The object pool managing this object.</param>
         public void Activate(Vector3 position, Quaternion rotation);
         
         /// <summary>
