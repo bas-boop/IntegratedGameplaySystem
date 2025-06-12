@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 namespace GameSystem
@@ -78,13 +79,6 @@ namespace GameSystem
             return _gameObjects.Last().Value;
         }
 
-        public static GameObject AddCamera()
-        {
-            Camera cam = FindFirstObjectByType<Camera>();
-            _gameObjects.Add(cam.name, cam.gameObject);
-            return cam.gameObject;
-        }
-
         public static void SetParent(string child, string parent)
         {
             if (!_gameObjects.ContainsKey(child)
@@ -95,6 +89,26 @@ namespace GameSystem
             }
             
             _gameObjects[child].transform.SetParent(_gameObjects[parent].transform);
+        }
+        
+        public static GameObject AddCamera()
+        {
+            Camera cam = FindFirstObjectByType<Camera>();
+            _gameObjects.Add(cam.name, cam.gameObject);
+            return cam.gameObject;
+        }
+
+        public static TMP_Text GetUiElement(string textElementName)
+        {
+            TMP_Text[] texts = FindObjectsByType<TMP_Text>(FindObjectsSortMode.None);
+
+            foreach (TMP_Text text in texts)
+            {
+                if (text.name == textElementName)
+                    return text;
+            }
+
+            return null;
         }
     }
 }

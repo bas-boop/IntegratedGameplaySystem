@@ -6,7 +6,7 @@ namespace Gameplay.HealthSystem
     {
         public int CurrentHealth { get; private set; }
         
-        private readonly int _startHealth;
+        public int StartHealth { get; private set; }
 
         private Action _onHeal;
         private Action _onDamage;
@@ -14,7 +14,7 @@ namespace Gameplay.HealthSystem
 
         public Health(int startHealth)
         {
-            _startHealth = startHealth;
+            StartHealth = startHealth;
             CurrentHealth = startHealth;
         }
 
@@ -24,17 +24,17 @@ namespace Gameplay.HealthSystem
 
         public void AddDieListener(Action targetAction) => _onDie += targetAction;
 
-        public void AddHealth(int amount)
+        public void Heal(int amount)
         {
             CurrentHealth += amount;
 
-            if (CurrentHealth > _startHealth)
-                CurrentHealth -= CurrentHealth - _startHealth;
+            if (CurrentHealth > StartHealth)
+                CurrentHealth -= CurrentHealth - StartHealth;
             
             _onHeal?.Invoke();
         }
 
-        public void RemoveHealth(int amount)
+        public void Damage(int amount)
         {
             CurrentHealth -= amount;
             

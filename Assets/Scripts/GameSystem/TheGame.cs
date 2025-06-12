@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Event;
 using Gameplay.Collision;
 using Gameplay.Enemies;
 using Player;
@@ -53,6 +54,11 @@ namespace GameSystem
 
             TestFSM t = new TestFSM();
             t.Yes();
+            
+            EventObserver.AddListener(ObserverEventType.GAME_BEGIN,
+                () => GameobjectComponentLibrary.GetUiElement("Controls").alpha = 0);
+            EventObserver.AddListener(ObserverEventType.GAME_END,
+                () => GameobjectComponentLibrary.GetUiElement("GameLost").alpha = 1);
         }
 
         private void CreateObjects()
@@ -73,15 +79,15 @@ namespace GameSystem
 
         private void UpdateCollision()
         {
-            ColliderX[] allColliders = GameobjectComponentLibrary.GetGameObjectComponents<ColliderX>();
+            Trigger[] allColliders = GameobjectComponentLibrary.GetGameObjectComponents<Trigger>();
 
             for (int i = 0; i < allColliders.Length; i++)
             {
-                ColliderX colliderA = allColliders[i];
+                Trigger colliderA = allColliders[i];
 
                 for (int j = i + 1; j < allColliders.Length; j++)
                 {
-                    ColliderX colliderB = allColliders[j];
+                    Trigger colliderB = allColliders[j];
                     
                     if (colliderA.enabled
                         && colliderB.enabled)

@@ -1,5 +1,7 @@
-﻿using GameSystem;
-using UnityEngine;
+﻿using UnityEngine;
+
+using Event;
+using GameSystem;
 
 namespace Player
 {
@@ -15,6 +17,9 @@ namespace Player
         public void SetInput(Vector2 input)
         {
             _input = input;
+            
+            if (input != Vector2.zero)
+                EventObserver.InvokeEvent(ObserverEventType.GAME_BEGIN);
         }
 
         public void OnStart()
@@ -27,6 +32,9 @@ namespace Player
 
         public void OnFixedUpdate()
         {
+            if (_rigidbody2D == null)
+                return;
+            
             _rigidbody2D.AddForce(_input * _speed, ForceMode2D.Force);
             
             if (_rigidbody2D.linearVelocity.magnitude > _maxSpeed)

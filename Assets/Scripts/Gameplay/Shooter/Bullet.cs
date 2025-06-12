@@ -11,7 +11,7 @@ namespace Gameplay.Shooter
     {
         private float _speed = 5;
         private float _despawnTime = 20;
-        private SphereColliderX _collider;
+        private SphereTrigger _collider;
         private SpriteRenderer _spriteRenderer;
         private Rigidbody2D _rb;
 
@@ -32,9 +32,10 @@ namespace Gameplay.Shooter
             _rb = GameobjectComponentLibrary.AddComponent<Rigidbody2D>(Name);
             _rb.gravityScale = 0;
             
-            _collider = GameobjectComponentLibrary.AddComponent<SphereColliderX>(Name);
+            _collider = GameobjectComponentLibrary.AddComponent<SphereTrigger>(Name);
             _collider.radius = 0.15f;
             _collider.AddListener(OnCollide);
+            _collider.enabled = false;
         }
 
         public void Delete()

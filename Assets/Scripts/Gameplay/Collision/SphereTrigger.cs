@@ -2,22 +2,22 @@
 
 namespace Gameplay.Collision
 {
-    public class SphereColliderX : ColliderX
+    public class SphereTrigger : Trigger
     {
         public float radius = 0.5f;
 
-        public override (bool, GameObject) IsColliding(ColliderX other)
+        public override (bool, GameObject) IsColliding(Trigger other)
         {
             (bool, GameObject) tuple = (false, null);
             
             switch (other)
             {
-                case SphereColliderX sphere:
+                case SphereTrigger sphere:
                     float dist = Vector3.Distance(transform.position, sphere.transform.position);
                     tuple = (dist < radius + sphere.radius, other.gameObject);
                     break;
                 
-                case BoxColliderX box:
+                case BoxTrigger box:
                     Vector3 closest = Vector3.Max(box.Bounds.min,
                                   Vector3.Min(transform.position, box.Bounds.max));
                     float distSq = (closest - transform.position).sqrMagnitude;
@@ -26,10 +26,7 @@ namespace Gameplay.Collision
             }
 
             if (tuple.Item1)
-            {
-                OnCollision?.Invoke(other.gameObject);
-                other.OnCollision?.Invoke(gameObject);
-            }
+                OnCollisionSucces(other);
 
             return tuple;
         }

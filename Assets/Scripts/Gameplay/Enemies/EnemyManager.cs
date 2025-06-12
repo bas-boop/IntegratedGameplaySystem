@@ -10,14 +10,14 @@ namespace Gameplay.Enemies
     public class EnemyManager : IGameobject
     {
         private string _name = "Enemy";
-        private string _visual = "PlayerVisual";
+        private string _visual = "EnemyVisual";
 
         private Vector2 _startPosition;
         
         private Rigidbody2D _rigidbody2D;
         private BoxCollider2D _boxCollider2D;
         private SpriteRenderer _spriteRenderer;
-        private BoxColliderX _collider;
+        private BoxTrigger _collider;
         private Health _health;
 
         private GameObject _thisGameObject;
@@ -46,14 +46,14 @@ namespace Gameplay.Enemies
 
             _rigidbody2D = GameobjectComponentLibrary.AddComponent<Rigidbody2D>(_name);
             _boxCollider2D = GameobjectComponentLibrary.AddComponent<BoxCollider2D>(_name);
-            _collider = GameobjectComponentLibrary.AddComponent<BoxColliderX>(_name);
+            _collider = GameobjectComponentLibrary.AddComponent<BoxTrigger>(_name);
             _spriteRenderer = GameobjectComponentLibrary.AddComponent<SpriteRenderer>(_visual);
             
             _thisGameObject = GameobjectComponentLibrary.GetGameObject(_name);
             _thisGameObject.tag = Tags.ENEMY_TAG;
 
             _health = new (3);
-            _health.AddDamageListener(() => Debug.Log("pain"));
+            //_health.AddDamageListener(() => Debug.Log("pain"));
             _health.AddDieListener(Remove);
             
             _collider.AddListener(OnCol);
@@ -72,7 +72,7 @@ namespace Gameplay.Enemies
 
         private void OnCol(GameObject other)
         {
-            _health.RemoveHealth(1);
+            _health.Damage(1);
         }
 
         private void Remove()
