@@ -1,15 +1,32 @@
 # Integrated Gameplay System
 A HKU game project focused on working with design patterns. These 2 repos are practice for this project: [Domain Decomposition](https://github.com/bas-boop/DomainDecomposition) & [DesPat](https://github.com/bas-boop/DesPat).
 
+# Gameflow
+```mermaid
+flowchart TD
+    Start[Start Game]
+    MainLoop[Main Game Loop]
+    SpawnEnemies[Spawn Enemies]
+    PlayerAction[Player Shoots / Moves]
+    EnemyAction[Enemies Attack / Move]
+    CheckCollision[Check Collisions]
+    UpdateScore[Update Score]
+    CheckPlayerHealth{Player Health > 0?}
+    CheckEnemies{All Enemies Defeated?}
+    GameOver[Game Over]
+    Win[Win Screen]
+    Restart[Restart Game]
+
+    Start --> MainLoop
+    MainLoop --> SpawnEnemies --> PlayerAction --> EnemyAction --> CheckCollision --> UpdateScore --> CheckPlayerHealth
+    CheckPlayerHealth -- No --> GameOver --> Restart --> Start
+    CheckPlayerHealth -- Yes --> CheckEnemies
+    CheckEnemies -- Yes --> Win --> Restart
+    CheckEnemies -- No --> MainLoop
+
+```
+
 # UML
-
-A --> B     : solid arrow
-A ..> B     : dashed arrow
-A o-- B     : aggregation
-A *-- B     : composition
-A <|-- B    : inheritance
-A <-- B     : reverse arrow
-
 ```mermaid
 classDiagram
 
