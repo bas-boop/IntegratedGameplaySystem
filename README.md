@@ -241,9 +241,9 @@ class Bullet {
 }
 
 class Tags{
-  -const string PLAYER_TAG = "Player";
-  -const string ENEMY_TAG = "Enemy";
-  -const string BULLET_TAG = "Bullet";
+  +const string PLAYER_TAG = "Player";
+  +const string ENEMY_TAG = "Enemy";
+  +const string BULLET_TAG = "Bullet";
 }
 
 class GameobjectComponentLibrary {
@@ -310,79 +310,283 @@ SphereTrigger --|> Trigger
 ```mermaid
 classDiagram
 
-class State
-class FSM
-class DictWrapper
-class SpriteMaker
-class ShapeType
-<<Enum>> ShapeType
-class PlayerMovement
-class PlayerManager
-class InputParser
-class CameraFollower
-class ObjectPool
-interface IPoolable
-class TheGame
-class Tags
-interface IGameobject
-class GameobjectComponentLibrary
-class Timer
-class CoinFlip
-class Shooter
-class Bullet
-class Health
-class Wander
-class Idle
-class EnemyUi
-class EnemyManager
-class Attack
-class Trigger
-class SphereTrigger
-class BoxTrigger
-class EventObserver
-class ObserverEventType
-<<Enum>> ObserverEventType
+class EnemyManager {
+  -string _name
+  -string _visual
+  -Vector2 _startPosition
+  -float _size
+  -Rigidbody2D _rigidbody2D
+  -BoxCollider2D _boxCollider2D
+  -SpriteRenderer _spriteRenderer
+  -GameObject _thisGameObject
+  -BoxTrigger _collider
+  -Health _health
+  -FSM _fsm
+  -List~State~ _states
+
+  +void OnStart()
+  +void OnUpdate()
+  +void OnFixedUpdate()
+  -void CreateComponents()
+  -void SetupComponents()
+  -void OnCol(GameObject other)
+  -void Remove()
+}
+
+class EnemyBuilder {
+  +SetName(string name) EnemyBuilder
+  +SetStartPosition(Vector2 startPos) EnemyBuilder
+  +SetSize(float size) EnemyBuilder
+  +Build() EnemyManager
+}
+
+class TheGame {
+  -PlayerManager _playerManager
+  -EnemyManager _enemyManager
+  -EnemyManager _enemyManager1
+  -EnemyManager _enemyManager2
+  -EnemyUi _enemyUi
+  -List~IGameobject~ _gameobjects
+  -bool _isStarting
+
+  -void Update() : Entry-point
+  -void FixedUpdate() : Entry-point
+  -void OnStart()
+  -void CreateObjects()
+  -void AddObjects()
+  -void UpdateCollision()
+  -void AddEvents()
+}
+
+EnemyBuilder --> EnemyManager : builds
+TheGame --> EnemyManager
 ```
 ## Objectpooling
 ```mermaid
 classDiagram
 
-class State
-class FSM
-class DictWrapper
-class SpriteMaker
-class ObjectPool
-interface IPoolable
-class TheGame
-class Tags
-interface IGameobject
-class GameobjectComponentLibrary
-class Shooter
-class Bullet
-class Health
-class Trigger
-class SphereTrigger
-class BoxTrigger
-class EventObserver
-class ObserverEventType
-<<Enum>> ObserverEventType
+class ObjectPool~T~ {
+  -const int INITIAL_SIZE = 10
+  -T _prefab
+  -int _countPool
+  -Queue~T~ _objectQueue
+  -List~T~ _dequeuedObjects
+  -Transform _parentTransform
+
+  +ObjectPool(Transform parent, T prefab)
+  +void OnStart()
+  +void OnUpdate()
+  +void OnFixedUpdate()
+  +T GetObject(Vector3 position, Quaternion rotation, Transform targetParent)
+  +List~T~ GetObjects(int amount, Vector3 position, Quaternion rotation, Transform targetParent)
+  +void ReturnObject(T obj)
+  +void ReturnObjects(List~T~ objs)
+  +void ResetPool()
+
+  -T CreateObject(Transform? targetParent)
+  -void CreateObjects(int amount, Transform targetParent)
+}
+
+class IPoolable~T~ {
+  +ObjectPoolT ObjectPool
+  +string Name
+  +void Create(ObjectPoolT objectPool, string name)
+  +void Delete()
+  +void Activate(Vector3 position, Quaternion rotation)
+  +void Deactivate()
+  +void ReturnToPool()
+}
+interface IPoolable~T~
+
+class Shooter {
+    -const string NAME = "Bullet"
+    -const float SHOOT_INTERVAL = 0.5f
+    -bool _isShooting
+    -Bullet _bullet
+    -Transform _firePoint
+    -ObjectPool~Bullet~ _bulletPool
+
+    +Init(Transform firePoint)
+    +ActivateShoot()
+    -Shoot()
+    -SetIsShooting()
+}
+
+class Bullet {
+    -float _speed = 5
+    -float _despawnTime = 20
+    -SphereTrigger _collider
+    -SpriteRenderer _spriteRenderer
+    -Rigidbody2D _rb
+
+    +ObjectPool~Bullet~ ObjectPool
+    +string Name
+    +Create(ObjectPool~Bullet~, string)
+    +Delete()
+    +Activate(Vector3, Quaternion)
+    +Deactivate()
+    +ReturnToPool()
+    -OnCollide(GameObject)
+}
+
+Bullet ..|> IPoolable~Bullet~
+ObjectPool~Bullet~ <-- Shooter
+Shooter --> Bullet
 ```
-## Finite state machine
+## Finite state machine - enemy
 ```mermaid
 classDiagram
 
-class State
-class FSM
-class DictWrapper
-class Tags
-interface IGameobject
-class GameobjectComponentLibrary
-class Timer
-class CoinFlip
-class Health
-class Wander
-class Idle
-class EnemyUi
-class EnemyManager
-class Attack
+class FSM {
+    -State _currentState
+    +DictWrapper sharedData
+
+    +FSM(IEnumerable~State~ states)
+    +void UpdateState()
+    +void FixedUpdateState()
+    +void SwitchState(State targetState)
+}
+
+class State {
+    +bool isInit
+    +void Init(FSM, DictWrapper)
+    #FSM p_owner
+    #DictWrapper p_sharedData
+
+    +void DoUpdate()
+    +void DoFixedUpdate()
+    +void DoEnter()
+    +void DoExit()
+}
+
+class DictWrapper {
+    +void Set(string key, object value)
+    +T Get<T>(string key)
+}
+
+class EnemyManager {
+  -string _name
+  -string _visual
+  -Vector2 _startPosition
+  -float _size
+  -Rigidbody2D _rigidbody2D
+  -BoxCollider2D _boxCollider2D
+  -SpriteRenderer _spriteRenderer
+  -GameObject _thisGameObject
+  -BoxTrigger _collider
+  -Health _health
+  -FSM _fsm
+  -List~State~ _states
+
+  +void OnStart()
+  +void OnUpdate()
+  +void OnFixedUpdate()
+  -void CreateComponents()
+  -void SetupComponents()
+  -void OnCol(GameObject other)
+  -void Remove()
+}
+
+class Idle {
+  -Timer _idleTimer
+
+  +void DoEnter()
+  +void DoExit()
+  +void DoUpdate()
+  +void DoFixedUpdate()
+  -void DoSomeThing()
+}
+
+class Wander {
+  -Rigidbody2D _ourRb
+  -Rect _wanderArea
+  -Vector2 _positionToWanderTo
+
+  +void DoEnter()
+  +void DoExit()
+  +void DoFixedUpdate()
+  -void PickNewWanderPosition()
+}
+
+class Attack {
+  -Rigidbody2D _ourRb
+  -Transform _ourTransform
+  -Transform _attackTransform
+  -Timer _chaseTimer
+
+  +void DoEnter()
+  +void DoExit()
+  +void DoUpdate()
+  +void DoFixedUpdate()
+  -void DoneChasing()
+}
+
+class Health {
+    +int CurrentHealth
+    +int StartHealth
+    -Action _onHeal
+    -Action _onDamage
+    -Action _onDie
+
+    +Health(int startHealth)
+    +AddHealListener(Action targetAction)
+    +AddDamageListener(Action targetAction)
+    +AddDieListener(Action targetAction)
+    +Heal(int amount)
+    +Damage(int amount)
+    -Die()
+}
+
+class IGameobject {
+  +OnStart()
+  +OnUpdate()
+  +OnFixedUpdate()
+}
+<<interface>> IGameobject
+
+class Timer {
+  +Action OnTimerDone
+  -float _duration
+  -float _currentTime
+  -bool _isRunning
+
+  +Timer(float durationSeconds)
+  +void SetTime(float seconds)
+  +void Start()
+  +void Stop()
+  +void Reset()
+  +void Tick(float deltaTime)
+  +float GetCurrentTime()
+  +bool IsDone()
+}
+
+class CoinFlip{
+  +bool Flip()
+}
+
+FSM --> "1" State
+FSM --> "1" DictWrapper
+FSM --> "*" State
+
+State --> FSM
+State --> DictWrapper
+
+EnemyManager --> FSM
+EnemyManager --> "*" State
+EnemyManager --> Health
+
+Idle --|> State
+Wander --|> State
+Attack --|> State
+
+class Rigidbody2D
+<<UnityComponent>> Rigidbody2D
+
+Idle --> Timer
+Idle --> CoinFlip
+Wander --> Rigidbody2D
+Attack --> Timer
+Attack --> Rigidbody2D
+
+EnemyManager ..|> IGameobject
 ```
